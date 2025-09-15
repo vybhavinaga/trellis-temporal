@@ -205,15 +205,6 @@ PYTHONPATH=. .venv/bin/pytest -q -k activities
 - [Postgres Documentation](https://www.postgresql.org/docs/)
 - [jq](https://stedolan.github.io/jq/)
 
----
-
-## Contributing
-
-Open an [issue](https://github.com/vybhavinaga/trellis-temporal/issues) or submit a [pull request](https://github.com/vybhavinaga/trellis-temporal/pulls).  
-Please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
-
----
-
 ## Screenshots & Demo
 
-See [`screenshots.md`](./screenshots.md) for a full visual walkthrough, including Temporal Web UI, API outputs, and typical workflow runs.
+See [`DEMO-WALKTHROUGH`](trellis-temporal/docs/DEMO-WALKTHROUGH.md) for a full visual walkthrough, including Temporal Web UI, API outputs, and typical workflow runs and [`TROUBLESHOOTING`](trellis-temporal/docs/TROUBLESHOOTING.md) here I’ve documented the main issues I encountered while setting up and running the project, along with the changes that resolved them.
