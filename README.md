@@ -17,7 +17,7 @@ Implements Order → Shipping (parent/child) workflows with signals, query, idem
 - [Troubleshooting](#troubleshooting)
 - [Workflow Criteria](#workflow-criteria)
 - [References](#references)
-- [Demo-Walkthrough](#demo-Walkthrough && troubleshooting documentation)
+- [Demo-Walkthrough & Troubleshooting documentation](#demo-walkthrough--troubleshooting-documentation)
 
 ---
 
