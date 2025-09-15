@@ -5,32 +5,32 @@ This walkthrough shows the system running end-to-end with screenshots from Tempo
 
 ---
 
-When the infrastructure is up, Temporal Web lists both the **OrderWorkflow** (parent) and **ShippingWorkflow** (child). The worker is polling both `orders-tq` and `shipping-tq`, so as soon as an order is started, the parent kicks off the child shipping flow.
+When the infrastructure is up, Temporal Web lists both the **OrderWorkflow** (parent) and **ShippingWorkflow** (child). The worker is polling both `orders-tq` and `shipping-tq`, so as soon as an order is placed both workflows are present.
 
-![infra up](docs/img/06-infra-up.png)  
-![worker polling](./img/07-worker-polling.png)  
-![workflows list](./img/01-workflows-list.png)
-
----
-
-The order summary shows signals being processed — address update, approve, and eventually a successful completion. In the history you can see the **StartChildWorkflowExecutionInitiated** event, which proves the parent created the shipping child. The shipping summary also links back to the parent workflow, showing the parent ↔ child relationship.
-
-![order summary](./img/02-order-summary.png)  
-![order history with child](./img/03-order-history-child-event.png)  
-![shipping summary with parent link](./img/04-shipping-summary-parent-link.png)
+![infra up](06-infra-up.png)  
+![worker polling](07-worker-polling.png)  
+![workflows list](01-workflows-list.png)
 
 ---
 
-During a normal “happy path,” the API logs and Temporal Web confirm the order is approved, the charge recorded, and the shipping dispatched. The events table in Postgres contains the audit trail of type + payload JSON, including idempotent charge and address updates.
+The order summary shows signals being processed — address update, approve, and eventually a successful completion. In the history you can see the **StartChildWorkflowExecutionInitiated** event, which triggers the child shipping workflow.
 
-![API happy path](./img/05-api-happy-path.png)  
-![events table](./img/08-events-table.png)
+![order summary](02-order-summary.png)  
+![order history with child](03-order-history-child-event.png)  
+![shipping summary with parent link](04-shipping-summary-parent-link.png)
 
 ---
 
-In the cancel variant, the workflow moves into a **TimedOut** state after cancellation. This is the current intended behavior: cancel signals are honored, but the short run timeout (15s) means the order does not complete cleanly. It still demonstrates signal handling and state transitions.
+During a normal “happy path,” the API logs and Temporal Web confirm the order is approved, the charge recorded, and the shipping dispatched. The events table in Postgres contains the audit trail of workflow events.
 
-![cancel flow](./img/09-cancel-flow.png)
+![API happy path](05-api-happy-path.png)  
+![events table](08-events-table.png)
+
+---
+
+In the cancel variant, the workflow moves into a **TimedOut** state after cancellation. This is the current intended behavior: cancel signals are honored, but the short run timeout (15s) means the order times out soon after.
+
+![cancel flow](09-cancel-flow.png)
 
 ---
 
