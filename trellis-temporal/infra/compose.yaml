@@ -1,0 +1,47 @@
+services:
+  temporal-postgresql:
+    image: postgres:16
+    container_name: temporal-postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_DB: temporal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal -d temporal"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: temporal
+    depends_on:
+      temporal-postgresql:
+        condition: service_healthy
+    environment:
+      - DB=postgres12         # <- expected by current auto-setup
+      - DB_PORT=5432
+      - POSTGRES_SEEDS=temporal-postgresql
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_DB=temporal
+    ports:
+      - "7233:7233"
+
+  temporal-web:
+    image: temporalio/web:latest
+    container_name: temporal-web
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
+    ports:
+      - "8080:8088"           # host 8080 -> container 8088
+
+volumes:
+  pgdata:
