@@ -7,7 +7,7 @@ This walkthrough shows the system running end-to-end with screenshots from Tempo
 
 When the infrastructure is up, Temporal Web lists both the **OrderWorkflow** (parent) and **ShippingWorkflow** (child). The worker is polling both `orders-tq` and `shipping-tq`, so as soon as an order is started, the parent kicks off the child shipping flow.
 
-![infra up](./img/06-infra-up.png)  
+![infra up](docs/img/06-infra-up.png)  
 ![worker polling](./img/07-worker-polling.png)  
 ![workflows list](./img/01-workflows-list.png)
 
