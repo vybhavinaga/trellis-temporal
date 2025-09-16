@@ -1,4 +1,4 @@
-asyncpg=0.29
+asyncpg==0.29
 annotated-types==0.7.0
 anyio==4.10.0
 click==8.2.1
