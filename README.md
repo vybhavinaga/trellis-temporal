@@ -95,6 +95,7 @@ docker ps --format '{{.Names}}' | grep -x temporal-postgresql
 #### macOS/Linux (bash)
 ```bash
 # terminal 1
+cd ~/tmp-trellis-test
 cd ~/trellis-temporal
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 source .venv/bin/activate
@@ -102,6 +103,7 @@ TRELLIS_DEMO_OK=1 DATABASE_URL="postgresql://temporal:temporal@localhost:5432/te
 ```
 ```bash
 # terminal 2
+cd ~/tmp-trellis-test
 cd ~/trellis-temporal
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 source .venv/bin/activate
@@ -131,6 +133,7 @@ curl -s -X POST "$BASE/orders/$ID/signals/approve"
 #### macOS/Linux (bash)
 ```bash
 # ensure infra is up (section 2)
+cd ~/tmp-trellis-test
 cd ~/trellis-temporal
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 PYTHONPATH=. .venv/bin/python -m pytest -q
