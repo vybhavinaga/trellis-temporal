@@ -53,22 +53,15 @@ Implements Order → Shipping (parent/child) workflows with signals, query, idem
 
 #### macOS/Linux (bash)
 ```bash
+mkdir -p ~/tmp-trellis-test && cd ~/tmp-trellis-test
 git clone https://github.com/vybhavinaga/trellis-temporal.git
 cd trellis-temporal
+# To make sure in correct folder as using nested branch structure
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
-#### Windows (PowerShell)
-```powershell
-git clone https://github.com/vybhavinaga/trellis-temporal.git
-cd trellis-temporal
-py -3.11 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
-
 ---
 
 ### 2. Infra: Temporal + Web + Postgres
@@ -79,10 +72,6 @@ chmod +x infra/up.sh 2>/dev/null || true
 cd infra
 ./up.sh
 cd -
-```
-#### Windows (PowerShell)
-```powershell
-docker compose -f infra/compose.yaml up -d --build
 ```
 
 #### Verify containers & schema
@@ -110,22 +99,13 @@ cd ~/trellis-temporal
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 source .venv/bin/activate
 TRELLIS_DEMO_OK=1 DATABASE_URL="postgresql://temporal:temporal@localhost:5432/temporal" TEMPORAL_ADDRESS="localhost:7233" .venv/bin/python worker.py   # polls orders-tq + shipping-tq
-
+```
+```bash
 # terminal 2
 cd ~/trellis-temporal
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 source .venv/bin/activate
 uvicorn api:app --reload      # FastAPI on http://127.0.0.1:8000
-```
-#### Windows (PowerShell)
-```powershell
-# terminal 1
-.\.venv\Scripts\Activate.ps1
-.\.venv\Scripts\python worker.py    # polls orders-tq + shipping-tq
-
-# terminal 2
-.\.venv\Scripts\Activate.ps1
-.\.venv\Scripts\python api.py       # FastAPI on http://127.0.0.1:8000
 ```
 ---
 
@@ -142,16 +122,6 @@ curl -s -X POST "$BASE/orders/$ID/signals/update_address" -H "Content-Type: appl
   -d '{"address":{"city":"Boston","street":"789 Oak Ave"}}'
 curl -s -X POST "$BASE/orders/$ID/signals/approve"
 ```
-#### Windows (PowerShell)
-```powershell
-curl -s -X POST http://127.0.0.1:8000/orders/123/start | jq
-curl -s -X POST http://127.0.0.1:8000/orders/123/signals/update_address `
-  -H 'Content-Type: application/json' `
-  -d '{"address":"42 Galaxy Way"}' | jq
-curl -s -X POST http://127.0.0.1:8000/orders/123/signals/approve | jq
-curl -s http://127.0.0.1:8000/orders/123/status | jq
-```
-
 > Temporal Web should show `OrderWorkflow` (parent) and `ShippingWorkflow` (child).
 
 ---
@@ -165,18 +135,12 @@ cd ~/trellis-temporal
 if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 PYTHONPATH=. .venv/bin/python -m pytest -q
 ```
-#### Windows (PowerShell)
-```powershell
-$env:PYTHONPATH="."
-.\.venv\Scripts\python -m pytest -q
-```
 #### Run subsets:
 ```bash
 # API smoke only
 PYTHONPATH=. .venv/bin/pytest -q tests/test_api_smoke.py
 # activities only
 PYTHONPATH=. .venv/bin/pytest -q -k activities
-# (PowerShell: replace the python path with .\.venv\Scripts\python -m pytest ...)
 ```
 
 ---
@@ -192,6 +156,12 @@ PYTHONPATH=. .venv/bin/pytest -q -k activities
   `docker exec -it temporal-postgresql pg_isready -U temporal -d temporal`
 - **Temporal CLI (optional):**  
   `temporal --address localhost:7233 workflow list --open`
+
+---
+## Windows
+
+If you are on Windows, run the same commands inside **Git Bash** or **WSL** (Windows Subsystem for Linux).  
+All steps are identical to the macOS/Linux instructions above.
 
 ---
 
