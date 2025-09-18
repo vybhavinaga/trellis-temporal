@@ -55,6 +55,7 @@ Implements Order → Shipping (parent/child) workflows with signals, query, idem
 ```bash
 git clone https://github.com/vybhavinaga/trellis-temporal.git
 cd trellis-temporal
+if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -74,6 +75,7 @@ python -m pip install -r requirements.txt
 
 #### macOS/Linux (bash)
 ```bash
+chmod +x infra/up.sh 2>/dev/null || true
 cd infra
 ./up.sh
 cd -
@@ -104,12 +106,16 @@ docker ps --format '{{.Names}}' | grep -x temporal-postgresql
 #### macOS/Linux (bash)
 ```bash
 # terminal 1
+cd ~/trellis-temporal
+if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 source .venv/bin/activate
-.venv/bin/python worker.py    # polls orders-tq + shipping-tq
+TRELLIS_DEMO_OK=1 DATABASE_URL="postgresql://temporal:temporal@localhost:5432/temporal" TEMPORAL_ADDRESS="localhost:7233" .venv/bin/python worker.py   # polls orders-tq + shipping-tq
 
 # terminal 2
+cd ~/trellis-temporal
+if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 source .venv/bin/activate
-.venv/bin/python api.py       # FastAPI on http://127.0.0.1:8000
+uvicorn api:app --reload      # FastAPI on http://127.0.0.1:8000
 ```
 #### Windows (PowerShell)
 ```powershell
@@ -152,6 +158,8 @@ curl -s http://127.0.0.1:8000/orders/123/status | jq
 #### macOS/Linux (bash)
 ```bash
 # ensure infra is up (section 2)
+cd ~/trellis-temporal
+if [ -d trellis-temporal ] && [ -f trellis-temporal/requirements.txt ]; then cd trellis-temporal; fi
 PYTHONPATH=. .venv/bin/python -m pytest -q
 ```
 #### Windows (PowerShell)
