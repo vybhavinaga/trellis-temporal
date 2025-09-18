@@ -133,11 +133,14 @@ uvicorn api:app --reload      # FastAPI on http://127.0.0.1:8000
 
 #### macOS/Linux (bash)
 ```bash
-curl -s -X POST http://127.0.0.1:8000/orders/123/start | jq
-curl -s -X POST http://127.0.0.1:8000/orders/123/signals/update_address \
-  -H 'Content-Type: application/json' -d '{"address":"42 Galaxy Way"}' | jq
-curl -s -X POST http://127.0.0.1:8000/orders/123/signals/approve | jq
-curl -s http://127.0.0.1:8000/orders/123/status | jq
+BASE=http://127.0.0.1:8000
+ID=$(date +%s)
+curl -s -X POST "$BASE/orders/$ID/start" -H "Content-Type: application/json" \
+  -d '{"payment_id":"pay-'"$ID"'","address":{"city":"Boston","street":"456 Main St"}}'
+sleep 0.5
+curl -s -X POST "$BASE/orders/$ID/signals/update_address" -H "Content-Type: application/json" \
+  -d '{"address":{"city":"Boston","street":"789 Oak Ave"}}'
+curl -s -X POST "$BASE/orders/$ID/signals/approve"
 ```
 #### Windows (PowerShell)
 ```powershell
